@@ -114,8 +114,15 @@ class Seeder {
       const userId = Accounts.createUser(userToCreate);
       
       // NOTE: If a roles array is passed and the global Roles (from the alanning:roles package) is present, assign roles to user.
-      if (roles && Roles !== 'undefined') Roles.addUsersToRoles(userId, roles);
+      if (roles && roles instanceof Array && Roles !== 'undefined') Roles.addUsersToRoles(userId, roles);
 
+      if (roles && typeof roles === 'object' && Roles !== 'undefined')  {
+        for (var k in roles){
+          if (roles.hasOwnProperty(k)) {
+            Roles.addUsersToRoles(userId, roles[k], k)
+          }
+        }
+      }
       return userId;
     }
   }
